@@ -6,7 +6,8 @@ import {Map, View} from 'ol';
 import {fromLonLat} from 'ol/proj';
 import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
-import Link from 'ol/interaction/link';
+import Link from 'ol/interaction/Link';
+import DragAndDrop from 'ol/interaction/DragAndDrop';
 
 // Create our map.
 const map = new Map({
@@ -32,3 +33,20 @@ const map = new Map({
 
 // Remember current positon after reloading page.
 map.addInteraction(new Link());
+
+// Create empty vector source for drag n drop.
+const source = new VectorSource();
+
+// Create new layer for empty source and add to map.
+const layer = new VectorLayer({
+    source: source,
+});
+map.addLayer(layer);
+
+// Create drag n drop interaction.
+map.addInteraction(
+    new DragAndDrop({
+        source: source,
+        formatConstructors: [GeoJSON],
+    })
+);
