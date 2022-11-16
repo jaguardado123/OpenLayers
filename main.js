@@ -8,6 +8,8 @@ import VectorLayer from 'ol/layer/Vector';
 import VectorSource from 'ol/source/Vector';
 import Link from 'ol/interaction/Link';
 import DragAndDrop from 'ol/interaction/DragAndDrop';
+import Modify from 'ol/interaction/Modify';
+import Draw from 'ol/interaction/Draw';
 
 // Create our map.
 const map = new Map({
@@ -31,8 +33,12 @@ const map = new Map({
     }),
 });
 
+
+
 // Remember current positon after reloading page.
 map.addInteraction(new Link());
+
+
 
 // Create empty vector source for drag n drop.
 const source = new VectorSource();
@@ -43,10 +49,27 @@ const layer = new VectorLayer({
 });
 map.addLayer(layer);
 
-// Create drag n drop interaction.
+// Create new drag n drop interaction.
 map.addInteraction(
     new DragAndDrop({
         source: source,
         formatConstructors: [GeoJSON],
+    })
+);
+
+
+// Create new modify interaction
+map.addInteraction(
+    new Modify({
+        source: source,
+    })
+);
+
+
+// Create new drawing feature
+map.addInteraction(
+    new Draw({
+        type: 'Polygon',
+        source: source,
     })
 );
