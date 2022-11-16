@@ -10,6 +10,7 @@ import Link from 'ol/interaction/Link';
 import DragAndDrop from 'ol/interaction/DragAndDrop';
 import Modify from 'ol/interaction/Modify';
 import Draw from 'ol/interaction/Draw';
+import Snap from 'ol/interaction/Snap';
 
 // Create our map.
 const map = new Map({
@@ -34,10 +35,8 @@ const map = new Map({
 });
 
 
-
 // Remember current positon after reloading page.
 map.addInteraction(new Link());
-
 
 
 // Create empty vector source for drag n drop.
@@ -73,3 +72,26 @@ map.addInteraction(
         source: source,
     })
 );
+
+
+// Create snap feature
+map.addInteraction(
+    new Snap({
+        source: source,
+    })
+)
+
+
+// Buttons
+const clear = document.getElementById('clear');
+clear.addEventListener('click', function() {
+    source.clear();
+});
+
+const format = new GeoJSON({featureProjection: 'EPSG:3857'});
+const download = document.getElementById('download');
+source.on('change', function() {
+    const features = source.getFeatures();
+    const json = format.writeFeatures(features);
+    download.href = 'data:application/json;charset=utf-8,' + encodeURIComponent(json);
+});
